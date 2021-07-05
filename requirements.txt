@@ -1,0 +1,9 @@
+requests
+mysql-connector-python
+pymongo
+twisted
+ldaptor
+ldap3
+python-ldap
+python3-ldap
+lxml

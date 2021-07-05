@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  test-lambda-python
+
+  this is a test app which contains multiple vulnerabilities
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  TestPythonVulnerableAppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: TestPythonVulnerableAppRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+  VulnerableApp:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: .
+      Handler: src/app.lambda_handler
+      Runtime: python3.8
+      Events:
+        VulnerableApi:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /{param1}
+            Method: POST
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  VulnerableApi:
+    Description: "API Gateway endpoint URL for Staging stage for Vulnerable app function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Stage/hello"
+  VulnerableApp:
+    Description: "Vulnerable app Lambda Function ARN"
+    Value: !GetAtt VulnerableApp.Arn
+  VulnerableAppIamRole:
+    Description: "Explicit IAM Role created for Vulnerable app"
+    Value: !GetAtt TestPythonVulnerableAppRole.Arn
