@@ -28,7 +28,7 @@ def xpath_xml(payload, _args):
         xmlstr = ET.tostring(x, encoding='utf8', method='xml')
         print("entry : {}".format(xmlstr))
         res.append(xmlstr)
-    return render(request, 'xpath/xpath_view_xml.html', {'response': res})
+    return res
 
 def xpath_lxml(payload, _args):
     query = ".//user[name/text()='%s']" % payload
@@ -40,4 +40,4 @@ def xpath_lxml(payload, _args):
         xmlstr = lxml.etree.tostring(x)
         print("entry : {}".format(xmlstr))
         res.append(xmlstr)
-    return render(request, 'xpath/xpath_view_lxml.html', {'response': res})
+    return res
