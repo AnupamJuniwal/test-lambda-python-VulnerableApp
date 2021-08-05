@@ -1,30 +1,8 @@
+import os
 from operator import itemgetter
 
-try:
-    import pymongo
-    myMongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
-    myMongoDb = myMongoClient["mydatabase"]
-    print("MongoClient instance created: {} {}".format(myMongoClient, myMongoDb))
-except Exception as e:
-    print("Error in Mongo instance creation, please check MongoClient is installed and mongo configuration is correct")
-    print("Exception : {}".format(e.__str__()))
-
+myMongoDb = None
 handler_name = 'mongo'
-
-def handler(args):
-    type, q = args
-    switcher = {
-        'insert_one': mongo_insert_one,
-        'insert_many': mongo_insert_many,
-        'find_one': mongo_find_one,
-        'find': mongo_find,
-        'delete_one': mongo_delete_one,
-        'delete_many': mongo_delete_many,
-        'update_one': mongo_update_one,
-        'update_many': mongo_update_many
-    }
-    data = switcher[type](q, args)
-    return data
 
 def mongo_insert_one(data, _args):
     name, address = itemgetter('name', 'address')(data)
@@ -105,3 +83,34 @@ def mongo_update_many(data, _args):
     res = mycol.update_many({"name": name}, {"$set": {"address": address}})
     print("update_many response : {}".format(res.raw_result))
     return res.raw_result
+
+switcher = {
+    'insert_one': mongo_insert_one,
+    'insert_many': mongo_insert_many,
+    'find_one': mongo_find_one,
+    'find': mongo_find,
+    'delete_one': mongo_delete_one,
+    'delete_many': mongo_delete_many,
+    'update_one': mongo_update_one,
+    'update_many': mongo_update_many
+}
+
+def get_instance():
+    if myMongoDb is not None:
+        return myMongoDb
+    try:
+        import pymongo
+        myMongoClient = pymongo.MongoClient(os.environ.get('MONGO_URI'))
+        myMongoDb = myMongoClient["mydatabase"]
+        print("MongoClient instance created: {} {}".format(myMongoClient, myMongoDb))
+        return myMongoDb
+    except Exception as e:
+        print("Error in Mongo instance creation, please check MongoClient is installed and mongo configuration is correct")
+        print("Exception : {}".format(e.__str__()))
+
+
+def handler(args):
+    type, q = args
+    get_instance()
+    data = switcher[type](q, args)
+    return data
