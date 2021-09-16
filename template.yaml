@@ -8,18 +8,18 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 300
     Environment:
       Variables:
         PYTHONPATH: "/opt/k2-python-agent/lib/site-packages:/var/runtime"
-        K2_HOST_IP: 34.214.224.142
+        K2_HOST_IP: 52.13.94.59
         K2_ENV: trace
         AWS_LAMBDA_ARN: arn:aws:lambda:us-west-2:733001177088:function:test-lambda-python-VulnerableApp-XQ3kB9yCI82J
-        MONGO_URI: mongodb://34.214.224.142:27017/injectable1
-        MYSQL_HOST: 34.214.224.142
+        MONGO_URI: mongodb://52.13.94.59:27017/injectable1
+        MYSQL_HOST: 52.13.94.59
         MYSQL_ROOT_PASSWORD: ''
         MYSQL_DB: K2test
-        LDAP_HOST: 34.214.224.142
+        LDAP_HOST: 52.13.94.59
         LAMBDA_ENABLE_RESPONSE_BLOCKING: false
 
 Resources:
@@ -45,7 +45,7 @@ Resources:
       Handler: src/app.lambda_handler
       Runtime: python3.8
       Layers:
-          - arn:aws:lambda:us-west-2:733001177088:layer:K2-PC:85
+          - arn:aws:lambda:us-west-2:733001177088:layer:K2-PC:195
       Events:
         VulnerableApi:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
