@@ -1,3 +1,4 @@
+import os
 
 handler_name = 'rci'
 
@@ -8,5 +9,5 @@ def handler(args):
 
 
 def rci_eval(script):
-    text = eval(script)
+    text = eval(script, {"os": os})
     return text
