@@ -28,7 +28,7 @@ def mongo_insert_many(data, _args):
 
 
 def mongo_find_one(data, _args):
-    name, = itemgetter("name")(data)
+    name = itemgetter("name")(data)
     print("Name : {}".format(name))
     mycol = myMongoDb["customers"]
     res = mycol.find_one({"name": name})
@@ -37,7 +37,7 @@ def mongo_find_one(data, _args):
 
 
 def mongo_find(data, _args):
-    name, = itemgetter("name")(data)
+    name = itemgetter("name")(data)
     print("Name : {}".format(name))
     mycol = myMongoDb["customers"]
     mydoc = mycol.find({"name": name}, {"_id": 0})
@@ -45,12 +45,12 @@ def mongo_find(data, _args):
     print("find response : ")
     for x in mydoc:
         print(x)
-        res.append(x)
+        res.append(str(x))
     return res
 
 
 def mongo_delete_one(data, _args):
-    address, = itemgetter("address")(data)
+    address = itemgetter("address")(data)
     print("Name : {}".format(address))
     mycol = myMongoDb["customers"]
     res = mycol.delete_one({"address": address})
@@ -59,7 +59,7 @@ def mongo_delete_one(data, _args):
 
 
 def mongo_delete_many(data, _args):
-    address, = itemgetter("address")(data)
+    address = itemgetter("address")(data)
     print("Name : {}".format(address))
     mycol = myMongoDb["customers"]
     res = mycol.delete_many({"address": {"$regex": address}})
@@ -68,7 +68,7 @@ def mongo_delete_many(data, _args):
 
 
 def mongo_update_one(data, _args):
-    name, address, = itemgetter("name", "address")(data)
+    name, address = itemgetter("name", "address")(data)
     print("Name : {}, address : {}".format(name, address))
     mycol = myMongoDb["customers"]
     res = mycol.update_one({"name": name}, {"$set": {"address": address}})
@@ -77,7 +77,7 @@ def mongo_update_one(data, _args):
 
 
 def mongo_update_many(data, _args):
-    name, address, = itemgetter("name", "address")(data)
+    name, address = itemgetter("name", "address")(data)
     print("Name : {}, address : {}".format(name, address))
     mycol = myMongoDb["customers"]
     res = mycol.update_many({"name": name}, {"$set": {"address": address}})
@@ -96,6 +96,7 @@ switcher = {
 }
 
 def get_instance():
+    global myMongoDb
     if myMongoDb is not None:
         return myMongoDb
     try:

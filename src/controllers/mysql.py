@@ -6,6 +6,7 @@ handler_name = 'mysql'
 
 
 def get_instance():
+    global mycursor
     if mycursor is not None:
         return mycursor
     try:

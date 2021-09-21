@@ -13,12 +13,12 @@ def handler(args):
     return data
 
 def ssrf_get(url, _args):
-    r = requests.get(url)
+    r = requests.get("http://{url}".format(url=url))
     return r.text
 
 
 def ssrf_httpclient(url, _args):
-    connection = http.client.HTTPSConnection(url)
+    connection = http.client.HTTPConnection(url)
     connection.request("GET", "/")
-    response = connection.getresponse()
+    response = connection.getresponse().read()
     return response

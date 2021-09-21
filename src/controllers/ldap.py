@@ -1,7 +1,9 @@
+import os
 # import ldap
 from ldap3 import Server, Connection
 from ldap3.core.exceptions import LDAPSocketOpenError
 
+LDAP_HOST = os.getenv("LDAP_HOST")
 handler_name = 'ldap'
 
 def handler(args):
@@ -41,15 +43,13 @@ def handler(args):
 
 def ldap_ldap3(uid, _args):
     try:
-        server = Server('127.0.0.1:8090')
-        conn = Connection(server, user="bob", password='secret')
+        server = Server(LDAP_HOST)
+        conn = Connection(server, user="root", password='secret')
         conn.bind()
-        treebase = "dc=example,dc=org"
-        attrs = ["sn", "objectclass"]
-        filter = "(|(uid={}))".format(uid)
-        print("filter query: {}".format(filter))
+        treebase = "o=myhost"
+        attrs = ['cn', 'uid', 'gid', 'description', 'homedirectory', 'shell']
+        filter = '(&(uid={}))'.format(uid)
         conn.search(treebase, filter, attributes=attrs)
-        print(conn.entries)
         return conn.entries
     except LDAPSocketOpenError as e:
         print("Excpetion in ldap_ldap3 : {}".format(e))

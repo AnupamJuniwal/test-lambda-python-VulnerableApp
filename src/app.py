@@ -30,6 +30,12 @@ def lambda_handler(event, context):
         return {
             "statusCode": 200,
             "body": result,
+            "multiValueHeaders": {
+                "Set-Cookie": [
+                    "Cookie1=Value1",
+                    "Cookie2=Value2"
+                ]
+            }
         }
     except Exception as e:
         print("Exception in app: {}".format(e.__class__))
