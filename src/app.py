@@ -25,7 +25,9 @@ def lambda_handler(event, context):
     try:
         result = handler_dict[jsonBody.get('runner')](jsonBody.get('args'))
         result = result or ""
-        if type(result) is type({}):
+        if type(result) is type(b''):
+            result = result.decode('utf-8')
+        if type(result) is not type(""):
             result = json.dumps(result)
         return {
             "statusCode": 200,

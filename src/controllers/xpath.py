@@ -19,13 +19,13 @@ def handler(args):
 def xpath_xml(payload, _args):
     tree = ET.parse('employees.xml')
     root = tree.getroot()
-    query = ".//employee/[firstName='%s']" % payload
+    query = ".//employee/[firstName=%s]" % payload
     print("XPATH query executing : {}".format(query))
     elmts = root.findall(query)  # Noncompliant
     res = []
     print("Data found: ")
     for x in elmts:
-        xmlstr = ET.tostring(x, encoding='utf8', method='xml')
+        xmlstr = ET.tostring(x, encoding='utf8', method='xml').decode('utf-8')
         print("entry : {}".format(xmlstr))
         res.append(xmlstr)
     return res
@@ -39,5 +39,5 @@ def xpath_lxml(payload, _args):
     for x in elmts:
         xmlstr = lxml.etree.tostring(x)
         print("entry : {}".format(xmlstr))
-        res.append(xmlstr)
+        res.append(xmlstr.decode('utf-8'))
     return res
